@@ -1,37 +1,36 @@
-'use client';
+'use client'
 
-import { ButtonHTMLAttributes, FC, useState } from 'react';
-import Button from './ui/Button';
-import { signOut } from 'next-auth/react';
-import toast from 'react-hot-toast';
-import { Loader2, LogOut } from 'lucide-react';
+import { Loader2, LogOut } from 'lucide-react'
+import { signOut } from 'next-auth/react'
+import { ButtonHTMLAttributes, FC, useState } from 'react'
+import { toast } from 'react-hot-toast'
+import Button from './ui/Button'
 
 interface SignOutButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {}
 
 const SignOutButton: FC<SignOutButtonProps> = ({ ...props }) => {
-  const [isSigningOut, setIsSigningOut] = useState<boolean>(false);
+  const [isSigningOut, setIsSigningOut] = useState<boolean>(false)
   return (
     <Button
       {...props}
-      variant="ghost"
+      variant='ghost'
       onClick={async () => {
-        setIsSigningOut(true);
+        setIsSigningOut(true)
         try {
-          await signOut();
+          await signOut()
         } catch (error) {
-          toast.error('Something went wrong with your sign out.');
+          toast.error('There was a problem signing out')
         } finally {
-          setIsSigningOut(false);
+          setIsSigningOut(false)
         }
-      }}
-    >
+      }}>
       {isSigningOut ? (
-        <Loader2 className="animate-spin h-4 w-4" />
+        <Loader2 className='animate-spin h-4 w-4' />
       ) : (
-        <LogOut className="h-4 w-4" />
+        <LogOut className='w-4 h-4' />
       )}
     </Button>
-  );
-};
+  )
+}
 
-export default SignOutButton;
+export default SignOutButton
