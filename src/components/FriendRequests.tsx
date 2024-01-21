@@ -25,13 +25,18 @@ const FriendRequests: FC<FriendRequestsProps> = ({
     pusherClient.subscribe(
       toPusherKey(`user:${sessionId}:incoming_friend_requests`)
     );
+    console.log('listening to ', `user:${sessionId}:incoming_friend_requests`);
 
     const friendRequestHandler = ({
-      id,
+      senderId,
       senderEmail,
       senderName,
     }: IncomingFriendRequest) => {
-      setFriendRequests((prev) => [...prev, { id, senderEmail, senderName }]);
+      console.log('function got called');
+      setFriendRequests((prev) => [
+        ...prev,
+        { senderId, senderEmail, senderName },
+      ]);
     };
 
     pusherClient.bind('incoming_friend_requests', friendRequestHandler);
@@ -45,24 +50,20 @@ const FriendRequests: FC<FriendRequestsProps> = ({
   }, [sessionId]);
 
   const acceptFriend = async (senderId: string) => {
-    await axios.post(`${process.env.NEXT_PUBLIC_URL}/api/friends/accept`, {
-      id: senderId,
-    });
+    await axios.post('/api/friends/accept', { id: senderId });
 
     setFriendRequests((prev) =>
-      prev.filter((request) => request.id !== senderId)
+      prev.filter((request) => request.senderId !== senderId)
     );
 
     router.refresh();
   };
 
   const denyFriend = async (senderId: string) => {
-    await axios.post(`${process.env.NEXT_PUBLIC_URL}/api/friends/deny`, {
-      id: senderId,
-    });
+    await axios.post('/api/friends/deny', { id: senderId });
 
     setFriendRequests((prev) =>
-      prev.filter((request) => request.id !== senderId)
+      prev.filter((request) => request.senderId !== senderId)
     );
 
     router.refresh();
@@ -74,23 +75,20 @@ const FriendRequests: FC<FriendRequestsProps> = ({
         <p className="text-sm text-zinc-500">Nothing to show here...</p>
       ) : (
         friendRequests.map((request) => (
-          <div key={request.id} className="flex gap-4 items-center">
+          <div key={request.senderId} className="flex gap-4 items-center">
             <UserPlus className="text-black" />
-            <div className="grid mr-4 text-black">
-              <p className="font-medium text-lg">{request.senderName}</p>
-              <p className="text-base">{request.senderEmail}</p>
-            </div>
-
+            <p className="font-medium text-lg">{request.senderEmail}</p>
             <button
+              onClick={() => acceptFriend(request.senderId)}
               aria-label="accept friend"
-              onClick={() => acceptFriend(request.id)}
               className="w-8 h-8 bg-indigo-600 hover:bg-indigo-700 grid place-items-center rounded-full transition hover:shadow-md"
             >
               <Check className="font-semibold text-white w-3/4 h-3/4" />
             </button>
+
             <button
+              onClick={() => denyFriend(request.senderId)}
               aria-label="deny friend"
-              onClick={() => denyFriend(request.id)}
               className="w-8 h-8 bg-red-600 hover:bg-red-700 grid place-items-center rounded-full transition hover:shadow-md"
             >
               <X className="font-semibold text-white w-3/4 h-3/4" />
