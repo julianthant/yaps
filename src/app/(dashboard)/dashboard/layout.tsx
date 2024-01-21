@@ -125,7 +125,7 @@ const Layout = async ({ children }: LayoutProps) => {
                 </div>
 
                 <span className="sr-only">Your profile</span>
-                <div className="flex flex-col max-w-[10rem] overflow-x-auto">
+                <div className="flex flex-col max-w-[9.7rem] overflow-x-auto">
                   <span aria-hidden="true">{session.user.name}</span>
                   <span className="text-xs text-zinc-400" aria-hidden="true">
                     {session.user.email}
