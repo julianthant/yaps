@@ -9,15 +9,16 @@ import { z } from 'zod';
 export async function POST(req: Request) {
   try {
     const body = await req.json();
+
     const { id: idToAdd } = z.object({ id: z.string() }).parse(body);
+
     const session = await getServerSession(authOptions);
 
     if (!session) {
       return new Response('Unauthorized', { status: 401 });
     }
 
-    //verify both users are not already friends
-
+    // verify both users are not already friends
     const isAlreadyFriends = await fetchRedis(
       'sismember',
       `user:${session.user.id}:friends`,
@@ -46,7 +47,7 @@ export async function POST(req: Request) {
     const user = JSON.parse(userRaw) as User;
     const friend = JSON.parse(friendRaw) as User;
 
-    //notify added user
+    // notify added user
 
     await Promise.all([
       pusherServer.trigger(
