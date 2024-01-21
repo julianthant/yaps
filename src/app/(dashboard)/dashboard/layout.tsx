@@ -55,7 +55,7 @@ const Layout = async ({ children }: LayoutProps) => {
             href={'/dashboard'}
             className="text-gray-700 text-xl font-semibold"
           >
-            Yapper
+            Yaps
           </Link>
         </div>
 
