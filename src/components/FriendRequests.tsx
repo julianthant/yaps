@@ -30,7 +30,6 @@ const FriendRequests: FC<FriendRequestsProps> = ({
       senderId,
       senderEmail,
     }: IncomingFriendRequest) => {
-      console.log('function got called');
       setFriendRequests((prev) => [...prev, { senderId, senderEmail }]);
     };
 
