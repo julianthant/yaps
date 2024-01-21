@@ -58,7 +58,20 @@ const Layout = async ({ children }: LayoutProps) => {
 
       <div className="hidden md:flex h-full w-full max-w-xs grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-white px-6">
         <Link href="/dashboard" className="flex h-16 shrink-0 items-center">
-          <Icons.Logo className="h-8 w-auto text-indigo-600" />
+          <div className="flex items-center gap-x-1">
+            <Link
+              href={'/dashboard'}
+              className="flex h-16 shrink-0 items-center"
+            >
+              <Icons.Logo className="h-8 w-auto text-indigo-600" />
+            </Link>
+            <Link
+              href={'/dashboard'}
+              className="text-gray-700 text-xl font-semibold"
+            >
+              Yaps
+            </Link>
+          </div>
         </Link>
 
         <nav className="flex flex-1 flex-col">
