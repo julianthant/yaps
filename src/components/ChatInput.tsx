@@ -21,7 +21,10 @@ const ChatInput: FC<ChatInputProps> = ({ chatPartner, chatId }) => {
     setIsLoading(true);
 
     try {
-      await axios.post('/api/message/send', { text: input, chatId });
+      await axios.post(`${process.env.NEXT_PUBLIC_URL}/api/message/send`, {
+        text: input,
+        chatId,
+      });
       setInput('');
       textAreaRef.current?.focus();
     } catch (error) {

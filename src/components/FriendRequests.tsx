@@ -45,7 +45,7 @@ const FriendRequests: FC<FriendRequestsProps> = ({
   }, [sessionId]);
 
   const acceptFriend = async (senderId: string) => {
-    await axios.post('/api/friends/accept', {
+    await axios.post(`${process.env.NEXT_PUBLIC_URL}/api/friends/accept`, {
       id: senderId,
     });
 
@@ -57,7 +57,7 @@ const FriendRequests: FC<FriendRequestsProps> = ({
   };
 
   const denyFriend = async (senderId: string) => {
-    await axios.post('/api/friends/deny', {
+    await axios.post(`${process.env.NEXT_PUBLIC_URL}/api/friends/deny`, {
       id: senderId,
     });
 
