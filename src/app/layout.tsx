@@ -4,7 +4,7 @@ import './globals.css';
 import Providers from '@/components/Providers';
 
 export const metadata: Metadata = {
-  title: 'Yapper',
+  title: 'Yaps',
   description: 'A social media platform for friends!',
 };
 
