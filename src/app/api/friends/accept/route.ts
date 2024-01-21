@@ -51,12 +51,12 @@ export async function POST(req: Request) {
     await Promise.all([
       pusherServer.trigger(
         toPusherKey(`user:${idToAdd}:friends`),
-        'new-friend',
+        'new_friend',
         user
       ),
       pusherServer.trigger(
         toPusherKey(`user:${session.user.id}:friends`),
-        'new-friend',
+        'new_friend',
         friend
       ),
       db.sadd(`user:${session.user.id}:friends`, idToAdd),
