@@ -1,36 +1,68 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Yaps
 
-## Getting Started
+A real-time one-to-one chat app. Users sign in with Google, add friends by email and chat with messages that arrive instantly through Pusher. Built with Next.js 14, NextAuth and Upstash Redis in January 2024.
 
-First, run the development server:
+## Status
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+Complete for its scope. Every feature below works end to end.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## What it does
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- Signs users in with Google through NextAuth. Middleware keeps `/dashboard` behind sign-in.
+- Sends a friend request to any registered email address. The other user accepts or denies it from the requests page.
+- Updates the friend-request count and the chat list live, without a page reload.
+- Delivers chat messages in real time and shows a toast for a new message in a chat you don't have open.
+- Checks on the server that the sender belongs to the chat and is friends with the recipient before it stores a message.
+- Has a separate chat layout for phones.
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+## How it works
 
-## Learn More
+Upstash Redis is the only datastore. Keys follow one pattern per record:
 
-To learn more about Next.js, take a look at the following resources:
+| Key | Holds |
+| --- | --- |
+| `user:{id}` | The user's profile |
+| `user:email:{email}` | The user ID for an email, used to add friends |
+| `user:{id}:incoming_friend_requests` | A set of pending request IDs |
+| `user:{id}:friends` | A set of friend IDs |
+| `chat:{idA--idB}:messages` | A sorted set of messages, scored by timestamp |
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+When a message is sent, `POST /api/message/send` validates it with Zod, stores it in the chat's sorted set and triggers two Pusher events. One goes to the open chat and one to the recipient's chat list.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+## Tech stack
 
-## Deploy on Vercel
+- Next.js 14 (App Router) and TypeScript
+- NextAuth with the Upstash Redis adapter
+- Upstash Redis
+- Pusher Channels
+- Tailwind CSS, React Hook Form, Zod and react-hot-toast
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Run it locally
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+You need Node.js 18 or later, an Upstash Redis database, a Pusher Channels app and a Google OAuth client.
+
+1. Install the dependencies:
+
+   ```bash
+   npm install
+   ```
+
+2. Create `.env.local`:
+
+   ```bash
+   NEXTAUTH_SECRET=             # any long random string
+   GOOGLE_CLIENT_ID=
+   GOOGLE_CLIENT_SECRET=
+   UPSTASH_REDIS_REST_URL=
+   UPSTASH_REDIS_REST_TOKEN=
+   PUSHER_APP_ID=
+   PUSHER_SECRET=
+   NEXT_PUBLIC_PUSHER_KEY=
+   NEXT_PUBLIC_PUSHER_CLUSTER=
+   ```
+
+3. Start the dev server and open http://localhost:3000:
+
+   ```bash
+   npm run dev
+   ```
