@@ -2,6 +2,8 @@
 
 A real-time one-to-one chat app. Users sign in with Google, add friends by email and chat with messages that arrive instantly through Pusher. Built with Next.js 14, NextAuth and Upstash Redis in January 2024.
 
+**Live site:** https://yaps.julianzaw.me. Google sign-in, Redis and Pusher aren't connected on this deployment, so it only shows the sign-in page.
+
 ## Status
 
 Complete for its scope. Every feature below works end to end.
